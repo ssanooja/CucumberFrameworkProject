@@ -21,7 +21,7 @@ steps:
 # ✅ Step 2: Set up Java (Required for Selenium + Maven)
 - task: JavaToolInstaller@1
   inputs:
-    versionSpec: '11'
+    versionSpec: '25'
     jdkArchitectureOption: 'x64'
     jdkSourceOption: 'PreInstalled'
   displayName: "Install Java 11"
