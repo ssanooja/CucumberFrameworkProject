@@ -1,0 +1,12 @@
+{
+  "validUser": {
+    "url": "https://demo.guru99.com/test/login.html",
+    "username": "sanooja",
+    "password": "san1234"
+  },
+  "invalidUser": {
+    "url": "https://demo.guru99.com/test/login.html",
+    "username": "wrongUser",
+    "password": "wrongPwd"
+  }
+}
