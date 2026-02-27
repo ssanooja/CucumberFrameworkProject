@@ -11,7 +11,7 @@ pool:
 
 variables:
   MAVEN_OPTS: "-Xmx1024m"
-  ALLURE_VERSION: "2.25.0"
+  ALLURE_VERSION: "2.32.0"
 
 steps:
 # ✅ Step 1: Checkout code
