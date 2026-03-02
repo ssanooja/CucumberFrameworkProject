@@ -38,22 +38,19 @@ steps:
     script: |
       curl -Ls -o allure.tgz https://github.com/allure-framework/allure2/releases/download/2.32.0/allure-2.32.0.tgz
       tar -zxvf allure.tgz
-      export PATH=$PATH:$(pwd)/allure-2.32.0/bin
-      allure --version
+      sudo mv allure-2.32.0 /opt/allure
 
-# Generate report
+# Generate Allure Report ✅ FIXED
 - task: Bash@3
   displayName: "Generate Allure Report"
   inputs:
     targetType: 'inline'
     script: |
-      ls -l target || true
-      ls -l target/allure-results || echo "❌ No allure-results found"
-      allure generate target/allure-results --clean -o target/allure-report
+      /opt/allure/bin/allure generate target/allure-results --clean -o target/allure-report
 
-# Publish report as artifact
+# Publish
 - task: PublishPipelineArtifact@1
-  displayName: "Publish Allure HTML"
+  displayName: "Publish Allure Report"
   inputs:
     targetPath: 'target/allure-report'
     artifact: 'AllureReport'
