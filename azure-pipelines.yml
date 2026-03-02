@@ -9,10 +9,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  MAVEN_OPTS: "-Xmx1024m"
-  ALLURE_VERSION: "2.32.0"
-
 steps:
 # ✅ Step 1: Checkout code
 - checkout: self
@@ -24,7 +20,7 @@ steps:
     versionSpec: '25'
     jdkArchitectureOption: 'x64'
     jdkSourceOption: 'PreInstalled'
-  displayName: "Install Java 11"
+  displayName: "Install Java 25"
 
 # ✅ Run Selenium + Cucumber tests
 - task: Maven@3
@@ -34,28 +30,30 @@ steps:
     options: '-Dheadless=true'
   displayName: "Run Selenium BDD Tests"
 
-# ✅ Install Allure CLI
+# Install Allure CLI
 - task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      curl -Ls -o allure.tgz https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz
-      tar -zxvf allure.tgz
-      sudo mv allure-${ALLURE_VERSION} /opt/allure
-      sudo ln -s /opt/allure/bin/allure /usr/bin/allure
   displayName: "Install Allure CLI"
-
-# ✅ Generate Allure Report
-- task: Bash@3
   inputs:
     targetType: 'inline'
     script: |
-      allure generate target/allure-results --clean -o target/allure-report
-  displayName: "Generate Allure Report"
+      curl -Ls -o allure.tgz https://github.com/allure-framework/allure2/releases/download/2.32.0/allure-2.32.0.tgz
+      tar -zxvf allure.tgz
+      export PATH=$PATH:$(pwd)/allure-2.32.0/bin
+      allure --version
 
-# ✅ Publish Allure Report
+# Generate report
+- task: Bash@3
+  displayName: "Generate Allure Report"
+  inputs:
+    targetType: 'inline'
+    script: |
+      ls -l target || true
+      ls -l target/allure-results || echo "❌ No allure-results found"
+      allure generate target/allure-results --clean -o target/allure-report
+
+# Publish report as artifact
 - task: PublishPipelineArtifact@1
+  displayName: "Publish Allure HTML"
   inputs:
     targetPath: 'target/allure-report'
     artifact: 'AllureReport'
-  displayName: "Publish Allure Report"
